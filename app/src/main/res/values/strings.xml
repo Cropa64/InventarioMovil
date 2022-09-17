@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Inventario Movil</string>
+
+    <string name="activity_intent_filter_action">com.inventario.datawedge.java.ACTION</string>
+
+    <string name="datawedge_intent_key_source">com.symbol.datawedge.source</string>
+    <string name="datawedge_intent_key_label_type">com.symbol.datawedge.label_type</string>
+    <string name="datawedge_intent_key_data">com.symbol.datawedge.data_string</string>
+    <string name="title_activity_configuracion">Configuracion</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+</resources>
