@@ -28,11 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SocketCliente implements Serializable {
+    private String ip_sola = "";
     private String ip_server = "";
     private final int puerto_server = 2022;
 
     public SocketCliente(String ip){
         ip_server = "http://"+ip+":"+puerto_server;
+        ip_sola = ip;
         System.out.println(ip_server);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -105,11 +107,6 @@ public class SocketCliente implements Serializable {
 
             Producto producto = new Producto(rtaJson.getString("codigo"), rtaJson.getString("descripcion"), Float.parseFloat(rtaJson.getString("stock")));
 
-            //String[] datos = new String[3];
-            //datos[0] = rtaJson.getString("codigo");
-            //datos[1] = rtaJson.getString("descripcion");
-            //datos[2] = rtaJson.getString("stock");
-
             os.close();
             conexion.disconnect();
 
@@ -118,6 +115,32 @@ public class SocketCliente implements Serializable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public String terminarTomaInventario(){
+        try{
+            URL url = new URL(ip_server+"/end");
+            HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
+            conexion.setRequestMethod("GET");
+
+            BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+            if(conexion.getResponseCode() == 200){
+                String jsonRtaString = Utiles.obtenerLineaString(fromServer);
+                JSONObject jsonRta = new JSONObject(jsonRtaString);
+
+                String status = jsonRta.getString("status");
+                if(status.equals("ok")){
+                    return "ok";
+                }else{
+                    String problema = jsonRta.getString("descripcion");
+                    return problema;
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return "Error desconocido";
+        }
+        return null;
     }
 
     public Integer obtenerNumTomaInventario(){
@@ -188,60 +211,11 @@ public class SocketCliente implements Serializable {
         }
     }
 
-    public void enviarMsg(String msg) {
-        try {
-            int serverPort = 58627;
-            InetAddress host = InetAddress.getByName(ip_server);
-            System.out.println("Connecting to server on port " + serverPort);
+    public String getIp_server() {
+        return ip_server;
+    }
 
-            Socket socket = new Socket(host,serverPort);
-
-            System.out.println("Just connected to " + socket.getRemoteSocketAddress());
-
-            PrintWriter toServer = new PrintWriter(socket.getOutputStream(),true);
-            toServer.println(msg);
-
-            BufferedReader fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String line = fromServer.readLine();
-
-            //String stringJsonRecibido = "";
-            //    stringJsonRecibido += linea;
-            //    System.out.println(stringJsonRecibido);
-            //System.out.println(stringJsonRecibido);
-            JSONObject objeto = null;
-            try{
-                objeto = new JSONObject(line);
-                System.out.println("OBJETO JSON: " + objeto);
-
-                //PROCESAR JSON
-                String totalResultsAvailable = "";
-                totalResultsAvailable = objeto.getJSONObject("ResultSet").getString("totalResultsAvailable");
-                System.out.println(totalResultsAvailable);
-
-                String result = null;
-                result = objeto.getJSONObject("ResultSet").getString("Result");
-                JSONArray resultJson = new JSONArray(result);
-
-                JSONObject potato1 = resultJson.getJSONObject(0);
-                String nombre1 = potato1.getString("Title");
-                System.out.println(nombre1);
-
-                JSONObject potato2 = resultJson.getJSONObject(1);
-                String nombre2 = potato2.getString("Title");
-                System.out.println(nombre2);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-
-            toServer.close();
-            //fromServer.close();
-            socket.close();
-        }
-        catch(UnknownHostException ex) {
-            ex.printStackTrace();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
+    public String getIp_sola() {
+        return ip_sola;
     }
 }

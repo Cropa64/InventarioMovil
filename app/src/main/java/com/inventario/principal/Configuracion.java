@@ -19,10 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Configuracion extends AppCompatActivity {
-    public static final String IP_MESSAGE = "com.inventario.principal.MESSAGE";
-    public static final String CC_MESSAGE = "com.inventario.principal.MESSAGE";
     private SocketCliente socketCliente;
-    private String IP;
     private List<CentroCosto> centrosCostoCargados = new ArrayList<>();
 
     @Override
@@ -31,32 +28,35 @@ public class Configuracion extends AppCompatActivity {
         setContentView(R.layout.activity_configuracion);
 
         consultarIntents(getIntent());
-        mostrarIP();
-        mostrarCentrosCosto();
+        mostrarDatos();
     }
 
     private void consultarIntents(Intent intent){
-        System.out.println(3);
         if(intent != null){
             if(intent.getStringExtra("IP_MESSAGE_INGRESARIP") != null){
-                System.out.println(4);
+                String IP;
                 IP = intent.getStringExtra("IP_MESSAGE_INGRESARIP");
                 socketCliente = new SocketCliente(IP);
             }
-            if(intent.getStringExtra("IP_MESSAGE_SERVER") != null){
-                System.out.println(5);
-                IP = intent.getStringExtra("IP_MESSAGE_SERVER");
+            if(intent.getSerializableExtra("SOCKET") != null){
+                socketCliente = (SocketCliente) intent.getSerializableExtra("SOCKET");
             }
-            if(intent.getSerializableExtra("CC_MESSAGE_SERVER") != null){
-                System.out.println(6);
-                centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CC_MESSAGE_SERVER");
+            if(intent.getSerializableExtra("CCCARGADOS") != null){
+                centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CCCARGADOS");
             }
         }
     }
 
+    private void mostrarDatos(){
+        mostrarIP();
+        mostrarCentrosCosto();
+    }
+
     private void mostrarIP(){
         final TextView output = findViewById(R.id.txtIPOutput);
-        output.setText(IP);
+        if(socketCliente != null){
+            output.setText(socketCliente.getIp_sola());
+        }
     }
 
     private void mostrarCentrosCosto(){
@@ -82,7 +82,6 @@ public class Configuracion extends AppCompatActivity {
 
     public void volverInicio(View view){
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("IP_MESSAGE",IP);
         intent.putExtra("CC_MESSAGE",(Serializable) centrosCostoCargados);
         intent.putExtra("SOCKET_MESSAGE", socketCliente);
         startActivity(intent);

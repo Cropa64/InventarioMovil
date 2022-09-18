@@ -14,6 +14,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Inventario"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="com.inventario.datawedge.java.ACTION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".IngresarStock"
             android:exported="false" />
         <activity
@@ -31,11 +40,6 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.inventario.datawedge.java.ACTION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>
