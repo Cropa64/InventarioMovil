@@ -2,9 +2,12 @@ package com.inventario.network;
 
 import android.content.Intent;
 import android.os.StrictMode;
+import android.widget.Toast;
 
 import com.inventario.principal.CentroCosto;
 import com.inventario.principal.IngresarStock;
+import com.inventario.principal.MainActivity;
+import com.inventario.principal.Producto;
 import com.inventario.utilidades.Utiles;
 
 import org.json.JSONArray;
@@ -25,8 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SocketCliente implements Serializable {
-    String ip_server = "";
-    int puerto_server = 2022;
+    private String ip_server = "";
+    private final int puerto_server = 2022;
 
     public SocketCliente(String ip){
         ip_server = "http://"+ip+":"+puerto_server;
@@ -36,7 +39,41 @@ public class SocketCliente implements Serializable {
         StrictMode.setThreadPolicy(policy);
     }
 
-    public String[] obtenerCantStock(String jsonConsulta){
+    public Integer enviarStockNuevo(JSONObject envio){
+        System.out.println("ENVIO NUEVO DE STOCK: " + envio);
+
+        try{
+            URL url = new URL(ip_server+"/inventario");
+            HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
+            conexion.setRequestMethod("POST");
+            conexion.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conexion.setDoOutput(true);
+            conexion.setDoInput(true);
+
+            OutputStream os = conexion.getOutputStream();
+            os.write(envio.toString().getBytes("UTF-8"));
+            os.flush();
+
+            String resultado;
+            if(conexion.getResponseCode() == 200){
+                try(BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getInputStream(), "utf-8"))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    System.out.println(response.toString());
+                    resultado = response.toString();
+                }
+            }
+            return 1;
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public Producto obtenerCantStock(String jsonConsulta){
         try{
             URL url = new URL(ip_server+"/consulta");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
@@ -66,15 +103,17 @@ public class SocketCliente implements Serializable {
                 rtaJson = new JSONObject(resultado);
             }
 
-            String[] datos = new String[3];
-            datos[0] = rtaJson.getString("codigo");
-            datos[1] = rtaJson.getString("descripcion");
-            datos[2] = rtaJson.getString("stock");
+            Producto producto = new Producto(rtaJson.getString("codigo"), rtaJson.getString("descripcion"), Float.parseFloat(rtaJson.getString("stock")));
+
+            //String[] datos = new String[3];
+            //datos[0] = rtaJson.getString("codigo");
+            //datos[1] = rtaJson.getString("descripcion");
+            //datos[2] = rtaJson.getString("stock");
 
             os.close();
             conexion.disconnect();
 
-            return datos;
+            return producto;
         }catch(Exception e){
             e.printStackTrace();
             return null;

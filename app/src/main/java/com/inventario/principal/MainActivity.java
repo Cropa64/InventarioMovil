@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inventario.network.SocketCliente;
 
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private String IP;
     private List<CentroCosto> centrosCostoCargados;
     private SocketCliente socketCliente;
+    private Integer idCCSeleccionado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         IP = intent.getStringExtra("IP_MESSAGE");
         centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CC_MESSAGE");
         socketCliente = (SocketCliente) intent.getSerializableExtra("SOCKET_MESSAGE");
+        idCCSeleccionado = intent.getIntExtra("IDCC", -1);
     }
 
     @Override
@@ -66,12 +69,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             e.printStackTrace();
         }
         output.setText(objetoJson.toString() + output.getText());
-
         //ENVIA AL SERVER JSON
         //socketCliente.enviarMsg(objetoJson.toString());
-        String[] rtaCantStock = socketCliente.obtenerCantStock(objetoJson.toString());
+        Producto rtaCantStock = socketCliente.obtenerCantStock(objetoJson.toString());
+
+        System.out.println("CODIGO: "+rtaCantStock.getCodigo());
+        System.out.println("DESCRIPCION: "+rtaCantStock.getDescripcion());
+        System.out.println("STOCK: "+rtaCantStock.getStock());
+
         Intent intent = new Intent(this, IngresarStock.class);
         intent.putExtra("DATOS", rtaCantStock);
+        intent.putExtra("SOCKET", socketCliente);
+        intent.putExtra("IDCC", idCCSeleccionado);
         startActivity(intent);
     }
 
@@ -101,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 .show();
     }
 
-    Integer idCCSeleccionado;
     public void guardarCCSeleccionado(int opcSeleccionada, CharSequence[] nombresCC){
         String ccSeleccionado = nombresCC[opcSeleccionada].toString();
         System.out.println("CENTRO DE COSTO SELECCIONADO: "+ccSeleccionado);

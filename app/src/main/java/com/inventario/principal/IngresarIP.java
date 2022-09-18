@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 
 public class IngresarIP extends AppCompatActivity {
-    public static final String IP_MESSAGE_INGRESARIP = "com.inventario.principal.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +20,6 @@ public class IngresarIP extends AppCompatActivity {
         EditText editTextIngresoIP = (EditText) findViewById(R.id.editTextIngresoIP);
         String IP = editTextIngresoIP.getText().toString();
         intentConf.putExtra("IP_MESSAGE_INGRESARIP", IP);
-        System.out.println(2);
         startActivity(intentConf);
     }
 }
