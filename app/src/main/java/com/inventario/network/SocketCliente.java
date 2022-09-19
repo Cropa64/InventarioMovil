@@ -1,13 +1,8 @@
 package com.inventario.network;
 
-import android.content.Intent;
 import android.os.StrictMode;
-import android.widget.Toast;
 
 import com.inventario.principal.CentroCosto;
-import com.inventario.principal.IngresarStock;
-import com.inventario.principal.Inventario;
-import com.inventario.principal.MainActivity;
 import com.inventario.principal.Producto;
 import com.inventario.utilidades.Utiles;
 
@@ -16,27 +11,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SocketCliente implements Serializable {
     private String ip_sola;
     private String ip_server;
-    private final int puerto_server = 2022;
+    private final int PUERTO_SERVER = 2022;
     private Producto productoConsultado;
 
     public SocketCliente(String ip){
-        ip_server = "http://"+ip+":"+puerto_server;
+        ip_server = "http://"+ip+":"+ PUERTO_SERVER;
         ip_sola = ip;
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
