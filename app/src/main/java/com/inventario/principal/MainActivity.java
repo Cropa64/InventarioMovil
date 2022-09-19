@@ -32,14 +32,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         DWUtilities.CreateDWProfile(this);
 
+        //CONSULTO INTENTS DESDE OTRA ACTIVIDAD CUANDO SE CREA ESTA
         consultarIntents(getIntent());
-    }
-
-    public void mostrarProductosCargados(){
-        final TextView output = findViewById(R.id.txtOutputStock);
-        for(int i = 0; i < productosCargados.size(); i++){
-            output.setText(output.getText() + "CODIGO: "+productosCargados.get(i).getCodigo() + " DESCRIPCION: "+productosCargados.get(i).getDescripcion() + " STOCK CARGADO: "+productosCargados.get(i).getStock() + "\n");
-        }
     }
 
     public void consultarIntents(Intent intent){
@@ -47,33 +41,34 @@ public class MainActivity extends AppCompatActivity {
         socketCliente = (SocketCliente) intent.getSerializableExtra("SOCKET_MESSAGE");
         idCCSeleccionado = intent.getIntExtra("IDCC", -1);
 
+        //SI EL INTENT CONTIENE LOS PRODUCTOS LOS GUARDO EN LA VARIABLE
         if((List<Producto>) intent.getSerializableExtra("PRODCARGADOS") != null){
             productosCargados = (List<Producto>) intent.getSerializableExtra("PRODCARGADOS");
-
-            for(int i = 0; i < productosCargados.size(); i++){
-                System.out.println("PRODS EN MAIN: "+productosCargados.get(i).getDescripcion());
-            }
-            mostrarProductosCargados();
         }
     }
 
+    //BOTON COMENZAR TOMA DE INVENTARIO
     public void comenzar(View view){
         if(socketCliente != null){
-            System.out.println("ENTRE A COMENZAR");
+            //OBTENGO EL NUMERO DE LA TOMA DE INVENTARIO
             Integer numTomaInventario = socketCliente.obtenerNumTomaInventario();
 
+            //CARGO LOS NOMBRES EN CHARSEQUENCE PARA USARLOS EN EL ALERT
             final CharSequence[] nombresCC = new CharSequence[centrosCostoCargados.size()];
             for(int i = 0; i < centrosCostoCargados.size(); i++){
                 nombresCC[i] = centrosCostoCargados.get(i).getNombre();
             }
 
+            //CORROBORO QUE TRAJO EL NUMERO DE TOMA DE INVENTARIO CORRECTAMENTE
             if(numTomaInventario > 0){
+                //ARMO EL ALERT CON LOS NOMBRES DE LOS CENTROS DE COSTO PARA SELECCIONAR
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("TOMA DE INVENTARIO NUMERO "+numTomaInventario)
                         .setItems(nombresCC, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 guardarCCSeleccionado(i, nombresCC);
+                                //ARMO EL INTENT PARA INICIAR LA ACTIVIDAD DE LA TOMA DE INVENTARIO
                                 Intent intent = new Intent(MainActivity.this, Inventario.class);
                                 intent.putExtra("SOCKET", socketCliente);
                                 intent.putExtra("IDCC", idCCSeleccionado);
@@ -91,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //GUARDO EL CENTRO DE COSTO SELECCIONADO PARA LA TOMA DE INVENTARIO, REALIZADO EN EL ALERT
     public void guardarCCSeleccionado(int opcSeleccionada, CharSequence[] nombresCC){
         String ccSeleccionado = nombresCC[opcSeleccionada].toString();
         System.out.println("CENTRO DE COSTO SELECCIONADO: "+ccSeleccionado);
@@ -102,8 +98,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //INICIO LA ACTIVIDAD DE CONFIGURACION DE LA APP
     public void configuracion(View view){
         Intent intent = new Intent(this, Configuracion.class);
+        //SI EL SOCKET ESTA CREADO SE LO ENVIO NUEVAMENTE, CASO CONTRARIO NO SE ENVIA NADA Y SE INICIA LA ACTIVIDAD
         if(socketCliente != null){
             intent.putExtra("SOCKET", socketCliente);
             intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);

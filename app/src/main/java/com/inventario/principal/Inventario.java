@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class Inventario extends AppCompatActivity implements View.OnTouchListener{
     private List<Producto> productosCargados;
@@ -31,6 +32,18 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         btnScan2.setOnTouchListener(this);
 
         consultarIntents(getIntent());
+        mostrarTextoCC();
+    }
+
+    public void mostrarTextoCC(){
+        String nombreCC = "";
+        for(int i = 0; i < centrosCostoCargados.size(); i++){
+            if(Objects.equals(idCCSeleccionado, centrosCostoCargados.get(i).getId())){
+                nombreCC = centrosCostoCargados.get(i).getNombre();
+            }
+        }
+        TextView txtCentroCosto = findViewById(R.id.txtMostrarCC);
+        txtCentroCosto.setText("Haciendo toma de inventario en centro de costo "+nombreCC);
     }
 
     public void consultarIntents(Intent intent){
@@ -45,6 +58,7 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         }
     }
 
+    //MUESTRO LOS PRODUCTOS QUE FUERON CARGANDO
     public void mostrarProductosCargados(){
         final TextView output = findViewById(R.id.txtOutputStock);
         for(int i = 0; i < productosCargados.size(); i++){
@@ -56,17 +70,16 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
     @Override
     protected void onNewIntent(Intent intent)
     {
-        System.out.println("ENTRE A ON NEW INTENT");
         super.onNewIntent(intent);
         displayScanResult(intent);
     }
 
     private void displayScanResult(Intent scanIntent)
     {
-        System.out.println("ENTRE A DISPLAY SCAN RESULT");
         String decodedData = scanIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
         String scan = decodedData;
 
+        //ARMO JSON CON EL CODIGO Y CENTRO DE COSTO PARA MANDARLO AL SOCKET Y ESTE AL SERVER
         JSONObject objetoJson = new JSONObject();
         try{
             objetoJson.put("codigo",scan);
@@ -74,8 +87,10 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         }catch(Exception e){
             e.printStackTrace();
         }
+        //MANDO AL SERVER Y GUARDO LA RESPUESTA
         String rtaEstado = socketCliente.obtenerCantStock(objetoJson.toString());
 
+        //PROCESO LA RESPUESTA
         if(rtaEstado.equals("ok")){
             Producto rtaCantStock = socketCliente.getProductoConsultado();
 
@@ -83,6 +98,7 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
             System.out.println("DESCRIPCION: "+rtaCantStock.getDescripcion());
             System.out.println("STOCK: "+rtaCantStock.getStock());
 
+            //INTENT PARA INICIAR ACTIVIDAD DE INGRESO DE NUEVO STOCK
             Intent intent = new Intent(this, IngresarStock.class);
             intent.putExtra("DATOS", rtaCantStock);
             intent.putExtra("SOCKET", socketCliente);
@@ -95,6 +111,7 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         }
     }
 
+    //METODO QUE TERMINA LA TOMA DE INVENTARIO
     public void terminar(View view){
         String respuesta = socketCliente.terminarTomaInventario();
 
@@ -106,12 +123,13 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
             intent.putExtra("CC_MESSAGE", (Serializable) centrosCostoCargados);
             startActivity(intent);
         }else if(respuesta.equals("Error desconocido")){
-
+            Toast.makeText(this, "Error al finalizar la toma de inventario", Toast.LENGTH_LONG).show();
         }else{
-
+            Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
         }
     }
 
+    //METODO SOBRESCRITO QUE MANEJA EL BOTON DE ESCANEO PARA COMENZARLO Y PARARLO
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (view.getId() == R.id.btnScan2)

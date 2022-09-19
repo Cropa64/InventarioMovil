@@ -76,6 +76,7 @@ public class SocketCliente implements Serializable {
     }
 
     public String obtenerCantStock(String jsonConsulta){
+        System.out.println("ENVIO JSON OBTENER CANT STOCK: "+jsonConsulta);
         try{
             URL url = new URL(ip_server+"/consulta");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
@@ -87,8 +88,6 @@ public class SocketCliente implements Serializable {
             OutputStream os = conexion.getOutputStream();
             os.write(jsonConsulta.getBytes("UTF-8"));
             os.flush();
-
-            System.out.println("CODIGO RESPUESTA: "+conexion.getResponseCode());
 
             JSONObject rtaJson;
             if(conexion.getResponseCode() == 200){
