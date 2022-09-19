@@ -34,8 +34,6 @@ public class SocketCliente implements Serializable {
     }
 
     public String enviarStockNuevo(JSONObject envio){
-        System.out.println("ENVIO NUEVO DE STOCK: " + envio);
-
         try{
             URL url = new URL(ip_server+"/inventario");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
@@ -160,10 +158,9 @@ public class SocketCliente implements Serializable {
                 BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
                 String jsonEntero = Utiles.obtenerLineaString(fromServer);
 
-                Integer numero = 0;
-
+                Integer numero;
                 JSONObject num = new JSONObject(jsonEntero);
-                numero = Integer.parseInt(num.getString("numero"));
+                numero = num.getInt("numero");
 
                 return numero;
             }else{
@@ -199,11 +196,11 @@ public class SocketCliente implements Serializable {
 
                 for(int i = 0; i < resultado.length(); i++){
                     JSONObject centrocosto = resultado.getJSONObject(i);
-                    String id = centrocosto.getString("id");
+                    Integer id = centrocosto.getInt("id");
                     String nombre = centrocosto.getString("nombre");
                     System.out.println("CENTRO COSTO "+ (i+1)+ ":" +nombre);
 
-                    CentroCosto centroCosto = new CentroCosto(Integer.parseInt(id), nombre);
+                    CentroCosto centroCosto = new CentroCosto(id, nombre);
                     centrosCostoCargados.add(centroCosto);
                 }
                 return centrosCostoCargados;
