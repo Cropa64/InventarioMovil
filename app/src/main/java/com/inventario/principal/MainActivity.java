@@ -60,30 +60,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void comenzar(View view){
-        System.out.println("ENTRE A COMENZAR");
-        Integer numTomaInventario = socketCliente.obtenerNumTomaInventario();
+        if(socketCliente != null){
+            System.out.println("ENTRE A COMENZAR");
+            Integer numTomaInventario = socketCliente.obtenerNumTomaInventario();
 
-        final CharSequence[] nombresCC = new CharSequence[centrosCostoCargados.size()];
-        for(int i = 0; i < centrosCostoCargados.size(); i++){
-            nombresCC[i] = centrosCostoCargados.get(i).getNombre();
+            final CharSequence[] nombresCC = new CharSequence[centrosCostoCargados.size()];
+            for(int i = 0; i < centrosCostoCargados.size(); i++){
+                nombresCC[i] = centrosCostoCargados.get(i).getNombre();
+            }
+
+            if(numTomaInventario > 0){
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("TOMA DE INVENTARIO NUMERO "+numTomaInventario)
+                        .setItems(nombresCC, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                guardarCCSeleccionado(i, nombresCC);
+                                Intent intent = new Intent(MainActivity.this, Inventario.class);
+                                intent.putExtra("SOCKET", socketCliente);
+                                intent.putExtra("IDCC", idCCSeleccionado);
+                                intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
+                                intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
+                                startActivity(intent);
+                            }
+                        })
+                        .show();
+            }else{
+                Toast.makeText(this, "No se pudo obtener el numero de toma de inventario", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(this, "Primero debe configurar la aplicacion", Toast.LENGTH_LONG).show();
         }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("TOMA DE INVENTARIO NUMERO "+numTomaInventario)
-                .setItems(nombresCC, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        System.out.println("OPCION SELECCIONADA: "+i);
-                        guardarCCSeleccionado(i, nombresCC);
-                        Intent intent = new Intent(MainActivity.this, Inventario.class);
-                        intent.putExtra("SOCKET", socketCliente);
-                        intent.putExtra("IDCC", idCCSeleccionado);
-                        intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
-                        intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
-                        startActivity(intent);
-                    }
-                })
-                .show();
     }
 
     public void guardarCCSeleccionado(int opcSeleccionada, CharSequence[] nombresCC){

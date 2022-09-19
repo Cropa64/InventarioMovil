@@ -69,9 +69,9 @@ public class IngresarStock extends AppCompatActivity {
             envioStock.put("centrodecosto", idCC);
             envioStock.put("stock", stockNuevo);
 
-            Integer resultado = socketCliente.enviarStockNuevo(envioStock);
+            String resultado = socketCliente.enviarStockNuevo(envioStock);
 
-            if(resultado == 1){
+            if(resultado.equals("ok")){
                 Toast.makeText(this, "Stock cargado correctamente", Toast.LENGTH_LONG).show();
                 producto.setStock(stockNuevo);
                 System.out.println("PRODUCTOS NULL?: "+productosCargados);
@@ -84,7 +84,7 @@ public class IngresarStock extends AppCompatActivity {
                 intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
                 startActivity(intent);
             } else{
-                Toast.makeText(this, "Ocurrio un error cargando el stock", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error: "+resultado, Toast.LENGTH_SHORT).show();
             }
         }catch(Exception e){
             e.printStackTrace();

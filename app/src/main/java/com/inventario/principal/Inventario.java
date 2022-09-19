@@ -73,19 +73,25 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         }catch(Exception e){
             e.printStackTrace();
         }
-        Producto rtaCantStock = socketCliente.obtenerCantStock(objetoJson.toString());
+        String rtaEstado = socketCliente.obtenerCantStock(objetoJson.toString());
 
-        System.out.println("CODIGO: "+rtaCantStock.getCodigo());
-        System.out.println("DESCRIPCION: "+rtaCantStock.getDescripcion());
-        System.out.println("STOCK: "+rtaCantStock.getStock());
+        if(rtaEstado.equals("ok")){
+            Producto rtaCantStock = socketCliente.getProductoConsultado();
 
-        Intent intent = new Intent(this, IngresarStock.class);
-        intent.putExtra("DATOS", rtaCantStock);
-        intent.putExtra("SOCKET", socketCliente);
-        intent.putExtra("IDCC", idCCSeleccionado);
-        intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
-        intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
-        startActivity(intent);
+            System.out.println("CODIGO: "+rtaCantStock.getCodigo());
+            System.out.println("DESCRIPCION: "+rtaCantStock.getDescripcion());
+            System.out.println("STOCK: "+rtaCantStock.getStock());
+
+            Intent intent = new Intent(this, IngresarStock.class);
+            intent.putExtra("DATOS", rtaCantStock);
+            intent.putExtra("SOCKET", socketCliente);
+            intent.putExtra("IDCC", idCCSeleccionado);
+            intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
+            intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
+            startActivity(intent);
+        }else{
+            Toast.makeText(this, rtaEstado, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void terminar(View view){

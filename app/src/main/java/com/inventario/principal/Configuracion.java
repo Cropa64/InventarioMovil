@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inventario.network.SocketCliente;
 
@@ -21,11 +23,13 @@ import java.util.List;
 public class Configuracion extends AppCompatActivity {
     private SocketCliente socketCliente;
     private List<CentroCosto> centrosCostoCargados = new ArrayList<>();
-
+    private Button botonCC;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracion);
+        botonCC = findViewById(R.id.btnObtenerCentrosCosto);
+        botonCC.setEnabled(false);
 
         consultarIntents(getIntent());
         mostrarDatos();
@@ -34,6 +38,7 @@ public class Configuracion extends AppCompatActivity {
     private void consultarIntents(Intent intent){
         if(intent != null){
             if(intent.getStringExtra("IP_MESSAGE_INGRESARIP") != null){
+                botonCC.setEnabled(true);
                 String IP;
                 IP = intent.getStringExtra("IP_MESSAGE_INGRESARIP");
                 socketCliente = new SocketCliente(IP);
@@ -71,13 +76,17 @@ public class Configuracion extends AppCompatActivity {
 
     public void ingresarIP(View view){
         Intent intent = new Intent(this, IngresarIP.class);
-        System.out.println(1);
         startActivity(intent);
     }
 
     public void obtenerCentrosCosto(View view){
         centrosCostoCargados = socketCliente.obtenerCentrosCosto();
-        mostrarCentrosCosto();
+        if(centrosCostoCargados != null){
+            mostrarCentrosCosto();
+            botonCC.setEnabled(false);
+        }else{
+            Toast.makeText(this, "No se pudieron traer los centros de costo", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void volverInicio(View view){

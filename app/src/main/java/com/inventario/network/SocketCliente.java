@@ -6,11 +6,13 @@ import android.widget.Toast;
 
 import com.inventario.principal.CentroCosto;
 import com.inventario.principal.IngresarStock;
+import com.inventario.principal.Inventario;
 import com.inventario.principal.MainActivity;
 import com.inventario.principal.Producto;
 import com.inventario.utilidades.Utiles;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -28,20 +30,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SocketCliente implements Serializable {
-    private String ip_sola = "";
-    private String ip_server = "";
+    private String ip_sola;
+    private String ip_server;
     private final int puerto_server = 2022;
+    private Producto productoConsultado;
 
     public SocketCliente(String ip){
         ip_server = "http://"+ip+":"+puerto_server;
         ip_sola = ip;
-        System.out.println(ip_server);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
     }
 
-    public Integer enviarStockNuevo(JSONObject envio){
+    public String enviarStockNuevo(JSONObject envio){
         System.out.println("ENVIO NUEVO DE STOCK: " + envio);
 
         try{
@@ -60,22 +62,30 @@ public class SocketCliente implements Serializable {
             if(conexion.getResponseCode() == 200){
                 try(BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getInputStream(), "utf-8"))) {
                     StringBuilder response = new StringBuilder();
-                    String responseLine = null;
+                    String responseLine;
                     while ((responseLine = br.readLine()) != null) {
                         response.append(responseLine.trim());
                     }
-                    System.out.println(response.toString());
                     resultado = response.toString();
                 }
+                JSONObject rtaJson = new JSONObject(resultado);
+                String statusInventario = rtaJson.getString("status");
+
+                if(statusInventario.equals("ok")){
+                    return statusInventario;
+                }else{
+                    return rtaJson.getString("descripcion");
+                }
+            }else{
+                return "Error de comunicacion con el servidor";
             }
-            return 1;
         }catch (Exception e){
             e.printStackTrace();
-            return 0;
+            return "";
         }
     }
 
-    public Producto obtenerCantStock(String jsonConsulta){
+    public String obtenerCantStock(String jsonConsulta){
         try{
             URL url = new URL(ip_server+"/consulta");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
@@ -90,27 +100,34 @@ public class SocketCliente implements Serializable {
 
             System.out.println("CODIGO RESPUESTA: "+conexion.getResponseCode());
 
-            JSONObject rtaJson = null;
-            String resultado = "";
+            JSONObject rtaJson;
             if(conexion.getResponseCode() == 200){
                 try(BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getInputStream(), "utf-8"))) {
-                    StringBuilder response = new StringBuilder();
-                    String responseLine = null;
-                    while ((responseLine = br.readLine()) != null) {
-                        response.append(responseLine.trim());
-                    }
-                    System.out.println(response.toString());
-                    resultado = response.toString();
+                    String jsonArmado = Utiles.obtenerLineaString(br);
+                    rtaJson = new JSONObject(jsonArmado);
                 }
-                rtaJson = new JSONObject(resultado);
+
+                try{
+                    String errorDescripcion = "";
+                    if(rtaJson.getInt("error") == 1){
+                        errorDescripcion = rtaJson.getString("error_descripcion");
+
+                        os.close();
+                        conexion.disconnect();
+                    }
+                    return errorDescripcion;
+                }catch(JSONException e){
+                    productoConsultado = new Producto(rtaJson.getString("codigo"), rtaJson.getString("descripcion"), Float.parseFloat(rtaJson.getString("stock")));
+                    os.close();
+                    conexion.disconnect();
+                    return "ok";
+                }
+            }else{
+                os.close();
+                conexion.disconnect();
+
+                return "Error de comunicacion con el servidor";
             }
-
-            Producto producto = new Producto(rtaJson.getString("codigo"), rtaJson.getString("descripcion"), Float.parseFloat(rtaJson.getString("stock")));
-
-            os.close();
-            conexion.disconnect();
-
-            return producto;
         }catch(Exception e){
             e.printStackTrace();
             return null;
@@ -123,8 +140,8 @@ public class SocketCliente implements Serializable {
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("GET");
 
-            BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
             if(conexion.getResponseCode() == 200){
+                BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
                 String jsonRtaString = Utiles.obtenerLineaString(fromServer);
                 JSONObject jsonRta = new JSONObject(jsonRtaString);
 
@@ -135,12 +152,13 @@ public class SocketCliente implements Serializable {
                     String problema = jsonRta.getString("descripcion");
                     return problema;
                 }
+            }else{
+                return "Error de comunicacion con el servidor";
             }
         }catch(Exception e){
             e.printStackTrace();
             return "Error desconocido";
         }
-        return null;
     }
 
     public Integer obtenerNumTomaInventario(){
@@ -149,20 +167,19 @@ public class SocketCliente implements Serializable {
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("GET");
 
-            int status = conexion.getResponseCode();
-            BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+            if(conexion.getResponseCode() == 200){
+                BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+                String jsonEntero = Utiles.obtenerLineaString(fromServer);
 
-            String jsonEntero = Utiles.obtenerLineaString(fromServer);
+                Integer numero = 0;
 
-            Integer numero = 0;
-            try{
                 JSONObject num = new JSONObject(jsonEntero);
                 numero = Integer.parseInt(num.getString("numero"));
-            }catch(Exception e){
-                e.printStackTrace();
-            }
 
-            return numero;
+                return numero;
+            }else{
+                return 0;
+            }
         }catch(Exception e){
             e.printStackTrace();
             return 0;
@@ -176,14 +193,14 @@ public class SocketCliente implements Serializable {
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("GET");
 
-            int status = conexion.getResponseCode();
-            BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+            if(conexion.getResponseCode() == 200){
+                BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
 
-            String jsonEntero = Utiles.obtenerLineaString(fromServer);
+                String jsonEntero = Utiles.obtenerLineaString(fromServer);
 
-            JSONObject objeto = null;
-            List<CentroCosto> centrosCostoCargados = new ArrayList<>();
-            try{
+                JSONObject objeto = null;
+                List<CentroCosto> centrosCostoCargados = new ArrayList<>();
+
                 objeto = new JSONObject(jsonEntero);
                 System.out.println("OBJETO JSON: " + objeto);
 
@@ -200,19 +217,18 @@ public class SocketCliente implements Serializable {
                     CentroCosto centroCosto = new CentroCosto(Integer.parseInt(id), nombre);
                     centrosCostoCargados.add(centroCosto);
                 }
-
-            }catch(Exception e){
-                e.printStackTrace();
+                return centrosCostoCargados;
+            }else{
+                return null;
             }
-            return centrosCostoCargados;
         }catch(Exception e){
             e.printStackTrace();
             return null;
         }
     }
 
-    public String getIp_server() {
-        return ip_server;
+    public Producto getProductoConsultado() {
+        return productoConsultado;
     }
 
     public String getIp_sola() {

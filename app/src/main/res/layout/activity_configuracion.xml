@@ -14,7 +14,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="15dp"
         android:onClick="ingresarIP"
-        android:text="INGRESAR IP"
+        android:text="INGRESAR IP SERVIDOR"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
