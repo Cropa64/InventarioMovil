@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private String IP;
     private List<CentroCosto> centrosCostoCargados;
     private List<Producto> productosCargados;
     private SocketCliente socketCliente;
@@ -44,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void consultarIntents(Intent intent){
-        IP = intent.getStringExtra("IP_MESSAGE");
         centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CC_MESSAGE");
         socketCliente = (SocketCliente) intent.getSerializableExtra("SOCKET_MESSAGE");
         idCCSeleccionado = intent.getIntExtra("IDCC", -1);
