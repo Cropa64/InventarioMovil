@@ -62,32 +62,36 @@ public class IngresarStock extends AppCompatActivity {
 
     public void ingresarStock(View view){
         EditText stockNuevoEditTxt = findViewById(R.id.editTxtNuevoStock);
-        Float stockNuevo = Float.parseFloat(stockNuevoEditTxt.getText().toString());
-        try{
-            JSONObject envioStock = new JSONObject();
-            envioStock.put("codigo",txtCodigo.getText().toString());
-            envioStock.put("centrodecosto", idCC);
-            envioStock.put("stock", stockNuevo);
+        if(!stockNuevoEditTxt.getText().toString().equals("")){
+            Float stockNuevo = Float.parseFloat(stockNuevoEditTxt.getText().toString());
+            try{
+                JSONObject envioStock = new JSONObject();
+                envioStock.put("codigo",txtCodigo.getText().toString());
+                envioStock.put("centrodecosto", idCC);
+                envioStock.put("stock", stockNuevo);
 
-            String resultado = socketCliente.enviarStockNuevo(envioStock);
+                String resultado = socketCliente.enviarStockNuevo(envioStock);
 
-            if(resultado.equals("ok")){
-                Toast.makeText(this, "Stock cargado correctamente", Toast.LENGTH_LONG).show();
-                producto.setStock(stockNuevo);
-                System.out.println("PRODUCTOS NULL?: "+productosCargados);
-                productosCargados.add(producto);
-                Intent intent = new Intent(this, Inventario.class);
-                intent.putExtra("STOCKOK", 1);
-                intent.putExtra("IDCC", idCC);
-                intent.putExtra("SOCKET", socketCliente);
-                intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
-                intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
-                startActivity(intent);
-            } else{
-                Toast.makeText(this, "Error: "+resultado, Toast.LENGTH_SHORT).show();
+                if(resultado.equals("ok")){
+                    Toast.makeText(this, "Stock cargado correctamente", Toast.LENGTH_LONG).show();
+                    producto.setStock(stockNuevo);
+                    System.out.println("PRODUCTOS NULL?: "+productosCargados);
+                    productosCargados.add(producto);
+                    Intent intent = new Intent(this, Inventario.class);
+                    intent.putExtra("STOCKOK", 1);
+                    intent.putExtra("IDCC", idCC);
+                    intent.putExtra("SOCKET", socketCliente);
+                    intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
+                    intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
+                    startActivity(intent);
+                } else{
+                    Toast.makeText(this, "Error: "+resultado, Toast.LENGTH_SHORT).show();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
             }
-        }catch(Exception e){
-            e.printStackTrace();
+        }else{
+            Toast.makeText(this, "Debe ingresar una cantidad valida", Toast.LENGTH_SHORT).show();
         }
     }
 }

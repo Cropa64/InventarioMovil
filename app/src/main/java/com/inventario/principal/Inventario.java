@@ -63,7 +63,7 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         final TextView output = findViewById(R.id.txtOutputStock);
         for(int i = 0; i < productosCargados.size(); i++){
             output.setText(output.getText() + "CODIGO: "+productosCargados.get(i).getCodigo() + " DESCRIPCION: "+productosCargados.get(i).getDescripcion() + " STOCK CARGADO: "+productosCargados.get(i).getStock() + "\n");
-            output.setText(output.getText() + "------------------------------" + "\n");
+            output.setText(output.getText() + "----------------------------------------------------------------" + "\n");
         }
     }
 
