@@ -13,9 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inventario.network.SocketCliente;
+import com.inventario.utilidades.Variables;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +34,36 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DWUtilities.CreateDWProfile(this);
+        Variables.IP = leerIP("ip.txt");
+
+        if(!Variables.IP.equals("")){
+            System.out.println("IP LEIDA: "+Variables.IP);
+            socketCliente = new SocketCliente(Variables.IP);
+        }
 
         //CONSULTO INTENTS DESDE OTRA ACTIVIDAD CUANDO SE CREA ESTA
         consultarIntents(getIntent());
     }
 
+    public String leerIP(String nombreArchivo){
+        File directorio = getApplicationContext().getFilesDir();
+        File archivoLeido = new File(directorio, nombreArchivo);
+        byte[] contenido = new byte[(int) archivoLeido.length()];
+        try {
+            FileInputStream stream = new FileInputStream(archivoLeido);
+            stream.read(contenido);
+            return new String(contenido);
+        }catch(Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
     public void consultarIntents(Intent intent){
         centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CC_MESSAGE");
-        socketCliente = (SocketCliente) intent.getSerializableExtra("SOCKET_MESSAGE");
+        if(socketCliente==null){
+            socketCliente = (SocketCliente) intent.getSerializableExtra("SOCKET_MESSAGE");
+        }
         idCCSeleccionado = intent.getIntExtra("IDCC", -1);
 
         //SI EL INTENT CONTIENE LOS PRODUCTOS LOS GUARDO EN LA VARIABLE

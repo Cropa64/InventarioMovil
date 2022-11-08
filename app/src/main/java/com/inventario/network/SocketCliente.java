@@ -2,15 +2,20 @@ package com.inventario.network;
 
 import android.os.StrictMode;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.inventario.principal.CentroCosto;
 import com.inventario.principal.Producto;
 import com.inventario.utilidades.Utiles;
+import com.inventario.utilidades.Variables;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -19,18 +24,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SocketCliente implements Serializable {
+public class SocketCliente extends AppCompatActivity implements Serializable {
     private String ip_sola;
     private String ip_server;
     private final int PUERTO_SERVER = 2022;
     private Producto productoConsultado;
 
     public SocketCliente(String ip){
-        ip_server = "http://"+ip+":"+ PUERTO_SERVER;
-        ip_sola = ip;
+        cargarIP(ip);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+    }
+
+    public void cargarIP(String ip){
+        ip_server = "http://"+ip+":"+ PUERTO_SERVER;
+        ip_sola = ip;
     }
 
     public String enviarStockNuevo(JSONObject envio){

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inventario.network.SocketCliente;
+import com.inventario.utilidades.Variables;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,7 +30,12 @@ public class Configuracion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracion);
         botonCC = findViewById(R.id.btnObtenerCentrosCosto);
-        botonCC.setEnabled(false);
+
+        if(!Variables.IP.equals("") && centrosCostoCargados.isEmpty()){
+            botonCC.setEnabled(true);
+        }else{
+            botonCC.setEnabled(false);
+        }
 
         consultarIntents(getIntent());
         mostrarDatos();
@@ -59,8 +65,8 @@ public class Configuracion extends AppCompatActivity {
 
     private void mostrarIP(){
         final TextView output = findViewById(R.id.txtIPOutput);
-        if(socketCliente != null){
-            output.setText(socketCliente.getIp_sola());
+        if(!Variables.IP.equals("")){
+            output.setText(Variables.IP);
         }
     }
 
@@ -85,7 +91,7 @@ public class Configuracion extends AppCompatActivity {
             mostrarCentrosCosto();
             botonCC.setEnabled(false);
         }else{
-            Toast.makeText(this, "No se pudieron traer los centros de costo", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "No se pudieron obtener los centros de costo", Toast.LENGTH_LONG).show();
         }
     }
 
