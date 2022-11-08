@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.inventario.utilidades.Utiles;
+import com.inventario.utilidades.Variables;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,6 +31,7 @@ public class IngresarIP extends AppCompatActivity {
         String IP = editTextIngresoIP.getText().toString();
 
         if(!IP.equals("")){
+            Variables.IP = IP;
             intentConf.putExtra("IP_MESSAGE_INGRESARIP", IP);
             writeToFile("ip.txt",IP);
             startActivity(intentConf);

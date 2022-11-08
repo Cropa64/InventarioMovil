@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SocketCliente extends AppCompatActivity implements Serializable {
+public class SocketCliente implements Serializable {
     private String ip_sola;
     private String ip_server;
     private final int PUERTO_SERVER = 2022;
