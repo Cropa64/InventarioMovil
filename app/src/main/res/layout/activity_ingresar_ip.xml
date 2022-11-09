@@ -41,6 +41,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="162dp"
         android:onClick="ingresarIP"
+        android:background="@android:color/holo_green_dark"
         android:text="INGRESAR"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

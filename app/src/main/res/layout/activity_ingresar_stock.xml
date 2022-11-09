@@ -8,17 +8,6 @@
     tools:context=".IngresarStock">
 
     <TextView
-        android:id="@+id/txtDescripcion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/txtTextoDescripcion"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/txtTextoCodigo"
         android:layout_width="120dp"
         android:layout_height="28dp"
@@ -33,6 +22,7 @@
         android:id="@+id/txtTextoDescripcion"
         android:layout_width="120dp"
         android:layout_height="28dp"
+        android:layout_marginTop="24dp"
         android:text="Descripcion: "
         android:textAlignment="center"
         android:textColor="#000000"
@@ -44,6 +34,7 @@
         android:id="@+id/txtTextoStock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
         android:text="Stock actual: "
         android:textColor="#000000"
         android:textSize="20sp"
@@ -51,9 +42,22 @@
         app:layout_constraintTop_toBottomOf="@+id/txtTextoDescripcion" />
 
     <TextView
+        android:id="@+id/txtStock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="128dp"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/txtTextoStock"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/txtCodigo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="1dp"
         android:textAlignment="center"
         android:textColor="#000000"
@@ -61,26 +65,16 @@
         app:layout_constraintStart_toEndOf="@+id/txtTextoCodigo"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txtStock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/txtTextoStock"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/editTxtNuevoStock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="101dp"
         android:ems="10"
+        android:hint="Stock"
         android:inputType="number"
-        android:minHeight="48dp"
         android:textAlignment="center"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,25 +86,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
-        android:layout_marginTop="164dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="150dp"
         android:text="Nuevo stock"
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txtStock" />
 
     <Button
         android:id="@+id/btnIngresarNuevoStock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="112dp"
-        android:layout_marginEnd="112dp"
+        android:layout_marginStart="123dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="124dp"
+        android:background="@android:color/holo_green_dark"
         android:onClick="ingresarStock"
         android:text="INGRESAR NUEVO STOCK"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTxtNuevoStock" />
+
+    <TextView
+        android:id="@+id/txtDescripcion"
+        android:layout_width="261dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="24dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/txtTextoDescripcion"
+        app:layout_constraintTop_toBottomOf="@+id/txtCodigo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
