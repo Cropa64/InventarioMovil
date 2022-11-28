@@ -78,7 +78,7 @@ public class SocketCliente implements Serializable {
             }
         }catch (Exception e){
             e.printStackTrace();
-            return "";
+            return e.getMessage();
         }
     }
 
@@ -97,12 +97,13 @@ public class SocketCliente implements Serializable {
             os.flush();
 
             JSONObject rtaJson;
+            System.out.println(conexion.getResponseCode());
             if(conexion.getResponseCode() == 200){
                 try(BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getInputStream(), "utf-8"))) {
                     String jsonArmado = Utiles.obtenerLineaString(br);
                     rtaJson = new JSONObject(jsonArmado);
                 }
-
+                System.out.println(rtaJson);
                 try{
                     String errorDescripcion = "";
                     if(rtaJson.getInt("error") == 1){

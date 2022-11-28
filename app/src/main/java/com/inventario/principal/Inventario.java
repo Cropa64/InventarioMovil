@@ -83,7 +83,7 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         JSONObject objetoJson = new JSONObject();
         try{
             objetoJson.put("codigo",scan);
-            objetoJson.put("centrodecosto",idCCSeleccionado);
+            objetoJson.put("idcentrocosto",idCCSeleccionado);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -94,7 +94,7 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         if(rtaEstado.equals("ok")){
             Producto rtaCantStock = socketCliente.getProductoConsultado();
 
-            System.out.println("CODIGO: "+rtaCantStock.getCodigo());
+            System.out.println("CÓDIGO: "+rtaCantStock.getCodigo());
             System.out.println("DESCRIPCION: "+rtaCantStock.getDescripcion());
             System.out.println("STOCK: "+rtaCantStock.getStock());
 
