@@ -67,11 +67,12 @@ public class IngresarStock extends AppCompatActivity {
             try{
                 JSONObject envioStock = new JSONObject();
                 envioStock.put("codigo",txtCodigo.getText().toString());
-                envioStock.put("centrodecosto", idCC);
+                envioStock.put("idcentrodecosto", idCC);
                 envioStock.put("stock", stockNuevo);
 
+                System.out.println("ENVIO: "+envioStock);
                 String resultado = socketCliente.enviarStockNuevo(envioStock);
-
+                System.out.println("RESULTADO: "+resultado);
                 if(resultado.equals("ok")){
                     Toast.makeText(this, "Stock cargado correctamente", Toast.LENGTH_LONG).show();
                     producto.setStock(stockNuevo);
