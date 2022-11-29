@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.inventario.adaptadores.ListAdapter;
 import com.inventario.network.SocketCliente;
 
 import org.json.JSONObject;
@@ -60,11 +63,18 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
 
     //MUESTRO LOS PRODUCTOS QUE FUERON CARGANDO
     public void mostrarProductosCargados(){
-        final TextView output = findViewById(R.id.txtOutputStock);
-        for(int i = 0; i < productosCargados.size(); i++){
-            output.setText(output.getText() + "CODIGO: "+productosCargados.get(i).getCodigo() + " DESCRIPCION: "+productosCargados.get(i).getDescripcion() + " STOCK CARGADO: "+productosCargados.get(i).getStock() + "\n");
-            output.setText(output.getText() + "----------------------------------------------------------------" + "\n");
-        }
+        ListAdapter listAdapter = new ListAdapter(this, productosCargados);
+        ListView listView = findViewById(R.id.list_view);
+
+        listView.setAdapter(listAdapter);
+        listView.setClickable(true);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                System.out.println(productosCargados.get(i).getDescripcion());
+            }
+        });
     }
 
     @Override
