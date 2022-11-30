@@ -65,13 +65,41 @@
         app:layout_constraintStart_toEndOf="@+id/txtTextoCodigo"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="150dp"
+        android:text="Nuevo stock"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+
+    <Button
+        android:id="@+id/btnIngresarNuevoStock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="124dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="124dp"
+        android:background="@android:color/holo_green_dark"
+        android:onClick="ingresarStock"
+        android:text="INGRESAR NUEVO STOCK"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTxtNuevoStock" />
+
     <EditText
         android:id="@+id/editTxtNuevoStock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="101dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="100dp"
         android:ems="10"
         android:hint="Stock"
         android:inputType="number"
@@ -82,34 +110,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="150dp"
-        android:text="Nuevo stock"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtStock" />
-
-    <Button
-        android:id="@+id/btnIngresarNuevoStock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="123dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="124dp"
-        android:background="@android:color/holo_green_dark"
-        android:onClick="ingresarStock"
-        android:text="INGRESAR NUEVO STOCK"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTxtNuevoStock" />
-
-    <TextView
         android:id="@+id/txtDescripcion"
         android:layout_width="261dp"
         android:layout_height="66dp"
@@ -118,5 +118,59 @@
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/txtTextoDescripcion"
         app:layout_constraintTop_toBottomOf="@+id/txtCodigo" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStock">
+
+        <RadioGroup
+            android:id="@+id/grupo_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <RadioButton
+                android:id="@+id/radio_sumar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sumar" />
+
+            <RadioButton
+                android:id="@+id/radio_reemplazar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Reemplazar" />
+
+            <RadioButton
+                android:id="@+id/radio_nada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No hacer nada" />
+
+        </RadioGroup>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textYaContabilizado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="177dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="177dp"
+        android:textColor="@color/colorPrimary"
+        android:text="Ya se ha contabilizado este producto. Que desea hacer?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStock" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

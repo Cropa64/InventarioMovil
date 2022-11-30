@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +30,15 @@ public class IngresarStock extends AppCompatActivity {
     private Producto producto;
     private List<Producto> productosCargados = new ArrayList<>();
     private List<CentroCosto> centrosCostoCargados;
+    private RadioGroup radioGroup;
+    private TextView textProdYaContabilizado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingresar_stock);
+        radioGroup = findViewById(R.id.grupo_radio);
+        textProdYaContabilizado = findViewById(R.id.textYaContabilizado);
         mostrarDatos();
     }
 
@@ -42,13 +48,18 @@ public class IngresarStock extends AppCompatActivity {
         idCC = (Integer) intent.getIntExtra("IDCC", -1);
         producto = (Producto) intent.getSerializableExtra("DATOS");
         centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CCCARGADOS");
+        Boolean prodYaCargado = (Boolean) intent.getBooleanExtra("YACARGADO", false);
+
+        if(prodYaCargado){
+            radioGroup.setVisibility(View.VISIBLE);
+            textProdYaContabilizado.setVisibility(View.VISIBLE);
+        }else{
+            radioGroup.setVisibility(View.GONE);
+            textProdYaContabilizado.setVisibility(View.GONE);
+        }
 
         if((List<Producto>) intent.getSerializableExtra("PRODCARGADOS") != null){
             productosCargados = (List<Producto>) intent.getSerializableExtra("PRODCARGADOS");
-
-            for(int i = 0; i < productosCargados.size(); i++){
-                System.out.println("PRODS EN INGRESAR STOCK: "+productosCargados.get(i).getDescripcion());
-            }
         }
 
         txtDescripcion = findViewById(R.id.txtDescripcion);
@@ -61,6 +72,15 @@ public class IngresarStock extends AppCompatActivity {
     }
 
     public void ingresarStock(View view){
+        RadioButton radioButton;
+
+        int radioId = radioGroup.getCheckedRadioButtonId();
+        radioButton = findViewById(radioId);
+
+        //Toast.makeText(this, "Radio seleccionado: "+radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+
+        String accion = determinarAccion(radioButton.getText().toString());
+
         EditText stockNuevoEditTxt = findViewById(R.id.editTxtNuevoStock);
         if(!stockNuevoEditTxt.getText().toString().equals("")){
             Float stockNuevo = Float.parseFloat(stockNuevoEditTxt.getText().toString());
@@ -69,6 +89,7 @@ public class IngresarStock extends AppCompatActivity {
                 envioStock.put("codigo",txtCodigo.getText().toString());
                 envioStock.put("idcentrodecosto", idCC);
                 envioStock.put("stock", stockNuevo);
+                envioStock.put("accion", accion);
 
                 System.out.println("ENVIO: "+envioStock);
                 String resultado = socketCliente.enviarStockNuevo(envioStock);
@@ -76,7 +97,6 @@ public class IngresarStock extends AppCompatActivity {
                 if(resultado.equals("ok")){
                     Toast.makeText(this, "Stock cargado correctamente", Toast.LENGTH_LONG).show();
                     producto.setStock(stockNuevo);
-                    System.out.println("PRODUCTOS NULL?: "+productosCargados);
                     productosCargados.add(producto);
                     Intent intent = new Intent(this, Inventario.class);
                     intent.putExtra("STOCKOK", 1);
@@ -94,5 +114,17 @@ public class IngresarStock extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Debe ingresar una cantidad valida", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private String determinarAccion(String textRadioSelected){
+        switch(textRadioSelected){
+            case "Sumar":
+                return "sumar";
+            case "Reemplazar":
+                return "reemplazar";
+            case "No hacer nada":
+                return "nada";
+        }
+        return null;
     }
 }

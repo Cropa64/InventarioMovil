@@ -88,6 +88,15 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
     {
         String decodedData = scanIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
         String scan = decodedData;
+        Boolean prodYaCargado = false;
+
+        if(productosCargados != null){
+            for(int i = 0; i < productosCargados.size(); i++){
+                if(scan.equals(productosCargados.get(i).getCodigo())){
+                    prodYaCargado = true;
+                }
+            }
+        }
 
         //ARMO JSON CON EL CODIGO Y CENTRO DE COSTO PARA MANDARLO AL SOCKET Y ESTE AL SERVER
         JSONObject objetoJson = new JSONObject();
@@ -115,6 +124,7 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
             intent.putExtra("IDCC", idCCSeleccionado);
             intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
             intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
+            intent.putExtra("YACARGADO", prodYaCargado);
             startActivity(intent);
         }else{
             Toast.makeText(this, rtaEstado, Toast.LENGTH_LONG).show();
