@@ -123,7 +123,7 @@ public class IngresarStock extends AppCompatActivity {
             case "Reemplazar":
                 return "reemplazar";
             case "No hacer nada":
-                return "nada";
+                return "";
         }
         return null;
     }

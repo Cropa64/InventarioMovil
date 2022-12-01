@@ -147,13 +147,13 @@
                 android:id="@+id/radio_reemplazar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="Reemplazar" />
 
             <RadioButton
                 android:id="@+id/radio_nada"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="No hacer nada" />
 
         </RadioGroup>
