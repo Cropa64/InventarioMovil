@@ -88,12 +88,12 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
     {
         String decodedData = scanIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
         String scan = decodedData;
-        Boolean prodYaCargado = false;
+        Integer prodYaCargado = -1;
 
         if(productosCargados != null){
             for(int i = 0; i < productosCargados.size(); i++){
                 if(scan.equals(productosCargados.get(i).getCodigo())){
-                    prodYaCargado = true;
+                    prodYaCargado = i;
                 }
             }
         }
@@ -116,6 +116,8 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
             System.out.println("CÓDIGO: "+rtaCantStock.getCodigo());
             System.out.println("DESCRIPCION: "+rtaCantStock.getDescripcion());
             System.out.println("STOCK: "+rtaCantStock.getStock());
+            System.out.println("VENTA: "+rtaCantStock.getVenta());
+            System.out.println("COSTO: "+rtaCantStock.getCosto());
 
             //INTENT PARA INICIAR ACTIVIDAD DE INGRESO DE NUEVO STOCK
             Intent intent = new Intent(this, IngresarStock.class);

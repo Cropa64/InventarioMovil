@@ -26,6 +26,8 @@ public class IngresarStock extends AppCompatActivity {
     private TextView txtDescripcion;
     private TextView txtCodigo;
     private TextView txtStock;
+    private TextView txtCosto;
+    private TextView txtVenta;
     private Integer idCC;
     private Producto producto;
     private List<Producto> productosCargados = new ArrayList<>();
@@ -48,9 +50,14 @@ public class IngresarStock extends AppCompatActivity {
         idCC = (Integer) intent.getIntExtra("IDCC", -1);
         producto = (Producto) intent.getSerializableExtra("DATOS");
         centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CCCARGADOS");
-        Boolean prodYaCargado = (Boolean) intent.getBooleanExtra("YACARGADO", false);
+        Integer prodYaCargado = (Integer) intent.getIntExtra("YACARGADO",-2);
 
-        if(prodYaCargado){
+        if((List<Producto>) intent.getSerializableExtra("PRODCARGADOS") != null){
+            productosCargados = (List<Producto>) intent.getSerializableExtra("PRODCARGADOS");
+        }
+
+        if(prodYaCargado > -1){
+            producto = productosCargados.get(prodYaCargado);
             radioGroup.setVisibility(View.VISIBLE);
             textProdYaContabilizado.setVisibility(View.VISIBLE);
         }else{
@@ -58,17 +65,17 @@ public class IngresarStock extends AppCompatActivity {
             textProdYaContabilizado.setVisibility(View.GONE);
         }
 
-        if((List<Producto>) intent.getSerializableExtra("PRODCARGADOS") != null){
-            productosCargados = (List<Producto>) intent.getSerializableExtra("PRODCARGADOS");
-        }
-
         txtDescripcion = findViewById(R.id.txtDescripcion);
         txtCodigo = findViewById(R.id.txtCodigo);
         txtStock = findViewById(R.id.txtStock);
+        txtVenta = findViewById(R.id.textVenta);
+        txtCosto = findViewById(R.id.textCosto);
 
         txtDescripcion.setText(producto.getDescripcion());
         txtCodigo.setText(producto.getCodigo());
         txtStock.setText(producto.getStock().toString());
+        txtVenta.setText(producto.getVenta().toString());
+        txtCosto.setText(producto.getCosto().toString());
     }
 
     public void ingresarStock(View view){
@@ -96,8 +103,18 @@ public class IngresarStock extends AppCompatActivity {
                 System.out.println("RESULTADO: "+resultado);
                 if(resultado.equals("ok")){
                     Toast.makeText(this, "Stock cargado correctamente", Toast.LENGTH_LONG).show();
-                    producto.setStock(stockNuevo);
-                    productosCargados.add(producto);
+
+                    if(radioGroup.getVisibility() == RadioGroup.GONE){
+                        producto.setStock(stockNuevo);
+                        productosCargados.add(producto);
+                    }else{
+                        if(accion.equals("sumar")){
+                            producto.setStock(producto.getStock() + stockNuevo);
+                        }else if(accion.equals("reemplazar")){
+                            producto.setStock(stockNuevo);
+                        }
+                    }
+
                     Intent intent = new Intent(this, Inventario.class);
                     intent.putExtra("STOCKOK", 1);
                     intent.putExtra("IDCC", idCC);

@@ -114,7 +114,7 @@ public class SocketCliente implements Serializable {
                     }
                     return errorDescripcion;
                 }catch(JSONException e){
-                    productoConsultado = new Producto(rtaJson.getString("codigo"), rtaJson.getString("descripcion"), Float.parseFloat(rtaJson.getString("stock")));
+                    productoConsultado = new Producto(rtaJson.getString("codigo"), rtaJson.getString("descripcion"), Float.parseFloat(rtaJson.getString("stock")), rtaJson.getDouble("precio"), rtaJson.getDouble("costo"));
                     os.close();
                     conexion.disconnect();
                     return "ok";

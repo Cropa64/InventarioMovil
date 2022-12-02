@@ -6,11 +6,15 @@ public class Producto implements Serializable {
     private String codigo;
     private String descripcion;
     private Float stock;
+    private Double venta;
+    private Double costo;
 
-    public Producto(String codigo, String descripcion, Float stock){
+    public Producto(String codigo, String descripcion, Float stock, Double venta, Double costo){
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.stock = stock;
+        this.venta = venta;
+        this.costo = costo;
     }
 
     public Producto(){
@@ -28,6 +32,10 @@ public class Producto implements Serializable {
         return stock;
     }
 
+    public Double getVenta(){ return venta; }
+
+    public Double getCosto(){ return costo; }
+
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
@@ -39,4 +47,8 @@ public class Producto implements Serializable {
     public void setStock(Float stock) {
         this.stock = stock;
     }
+
+    public void setVenta(Double venta){ this.venta = venta; }
+
+    public void setCosto(Double costo){ this.costo = costo; }
 }
