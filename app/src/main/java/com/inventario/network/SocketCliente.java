@@ -42,6 +42,24 @@ public class SocketCliente implements Serializable {
         ip_sola = ip;
     }
 
+    public String login(){
+        try{
+            URL url = new URL(ip_server+"/login");
+            HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
+            conexion.setRequestMethod("GET");
+            conexion.setConnectTimeout(3000);
+
+            if(conexion.getResponseCode() != 200){
+                return "No hay una toma de inventario iniciada";
+            }else{
+                return "ok";
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return "No hay una toma de inventario iniciada";
+        }
+    }
+
     public String enviarStockNuevo(JSONObject envio){
         try{
             URL url = new URL(ip_server+"/inventario");
@@ -106,15 +124,15 @@ public class SocketCliente implements Serializable {
                 System.out.println(rtaJson);
                 try{
                     String errorDescripcion = "";
-                    if(rtaJson.getInt("error") == 1){
-                        errorDescripcion = rtaJson.getString("error_descripcion");
+                    if(!rtaJson.getString("error").equals("")){
+                        errorDescripcion = rtaJson.getString("error");
 
                         os.close();
                         conexion.disconnect();
                     }
                     return errorDescripcion;
                 }catch(JSONException e){
-                    productoConsultado = new Producto(rtaJson.getString("codigo"), rtaJson.getString("descripcion"), Float.parseFloat(rtaJson.getString("stock")), rtaJson.getDouble("precio"), rtaJson.getDouble("costo"));
+                    productoConsultado = new Producto(rtaJson.getString("codigo"), rtaJson.getString("descripcion"), 0f, rtaJson.getDouble("precio"), 0.0);
                     os.close();
                     conexion.disconnect();
                     return "ok";
@@ -123,7 +141,7 @@ public class SocketCliente implements Serializable {
                 os.close();
                 conexion.disconnect();
 
-                return "Error de comunicacion con el servidor";
+                return "El producto no existe";
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -182,7 +200,7 @@ public class SocketCliente implements Serializable {
         }
     }
 
-    public List<CentroCosto> obtenerCentrosCosto(){
+    /*public List<CentroCosto> obtenerCentrosCosto(){
         try{
             URL url = new URL(ip_server+"/centrocosto");
             System.out.println(url);
@@ -221,7 +239,7 @@ public class SocketCliente implements Serializable {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 
     public Producto getProductoConsultado() {
         return productoConsultado;

@@ -34,7 +34,7 @@
                     android:id="@+id/stock_cargado"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Stock nuevo: 50"
+                    android:text="Stock ingresado: 50"
                     android:textColor="@color/cardview_dark_background"
                     android:textSize="14dp">
 

@@ -1,13 +1,17 @@
 package com.inventario.principal;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,21 +43,21 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
     }
 
     public void mostrarTextoCC(){
-        String nombreCC = "";
+        /*String nombreCC = "";
         for(int i = 0; i < centrosCostoCargados.size(); i++){
             if(Objects.equals(idCCSeleccionado, centrosCostoCargados.get(i).getId())){
                 nombreCC = centrosCostoCargados.get(i).getNombre();
             }
-        }
+        }*/
         TextView txtCentroCosto = findViewById(R.id.txtMostrarCC);
-        txtCentroCosto.setText("Haciendo toma de inventario en centro de costo "+nombreCC);
+        txtCentroCosto.setText("Realizando toma de inventario");
     }
 
     public void consultarIntents(Intent intent){
         System.out.println("ENTRE A CONSULTAR INTENTS");
         socketCliente = (SocketCliente) intent.getSerializableExtra("SOCKET");
-        idCCSeleccionado = intent.getIntExtra("IDCC", -1);
-        centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CCCARGADOS");
+        //idCCSeleccionado = intent.getIntExtra("IDCC", -1);
+        //centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CCCARGADOS");
 
         if((List<Producto>) intent.getSerializableExtra("PRODCARGADOS") != null){
             productosCargados = (List<Producto>) intent.getSerializableExtra("PRODCARGADOS");
@@ -77,6 +81,38 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         });
     }
 
+    //TERMINAR INGRESO MANUAL DE CODIGO DE BARRAS
+    public void ingresoManual(View view){
+        //final String[] codigoIngresado = new String[16];
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Ingrese el código");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("Codigo");
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String codigoIngresado = input.getText().toString();
+                System.out.println("CODIGO MANUAL INGRESADO: "+codigoIngresado);
+                String rtaEstado = enviarCodigoAlServer(codigoIngresado);
+                procesarRespuesta(rtaEstado);
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+
+
     @Override
     protected void onNewIntent(Intent intent)
     {
@@ -88,27 +124,21 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
     {
         String decodedData = scanIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
         String scan = decodedData;
-        Integer prodYaCargado = -1;
+        //Integer prodYaCargado = -1;
 
-        if(productosCargados != null){
+        /*if(productosCargados != null){
             for(int i = 0; i < productosCargados.size(); i++){
                 if(scan.equals(productosCargados.get(i).getCodigo())){
                     prodYaCargado = i;
                 }
             }
-        }
+        }*/
 
-        //ARMO JSON CON EL CODIGO Y CENTRO DE COSTO PARA MANDARLO AL SOCKET Y ESTE AL SERVER
-        JSONObject objetoJson = new JSONObject();
-        try{
-            objetoJson.put("codigo",scan);
-            objetoJson.put("idcentrocosto",idCCSeleccionado);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        //MANDO AL SERVER Y GUARDO LA RESPUESTA
-        String rtaEstado = socketCliente.obtenerCantStock(objetoJson.toString());
+        String rtaEstado = enviarCodigoAlServer(scan);
+        procesarRespuesta(rtaEstado);
+    }
 
+    private void procesarRespuesta(String rtaEstado){
         //PROCESO LA RESPUESTA
         if(rtaEstado.equals("ok")){
             Producto rtaCantStock = socketCliente.getProductoConsultado();
@@ -123,14 +153,28 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
             Intent intent = new Intent(this, IngresarStock.class);
             intent.putExtra("DATOS", rtaCantStock);
             intent.putExtra("SOCKET", socketCliente);
-            intent.putExtra("IDCC", idCCSeleccionado);
+            //intent.putExtra("IDCC", idCCSeleccionado);
             intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
-            intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
-            intent.putExtra("YACARGADO", prodYaCargado);
+            //intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
+            //intent.putExtra("YACARGADO", prodYaCargado);
             startActivity(intent);
         }else{
             Toast.makeText(this, rtaEstado, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private String enviarCodigoAlServer(String codigo){
+        JSONObject objetoJson = new JSONObject();
+        try{
+            objetoJson.put("codigo",codigo);
+            //objetoJson.put("idcentrocosto",idCCSeleccionado);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        //MANDO AL SERVER Y GUARDO LA RESPUESTA
+        String rtaEstado = socketCliente.obtenerCantStock(objetoJson.toString());
+
+        return rtaEstado;
     }
 
     //METODO QUE TERMINA LA TOMA DE INVENTARIO

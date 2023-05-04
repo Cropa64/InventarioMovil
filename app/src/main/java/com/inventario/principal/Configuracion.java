@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +31,13 @@ public class Configuracion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracion);
-        botonCC = findViewById(R.id.btnObtenerCentrosCosto);
+        //botonCC = findViewById(R.id.btnObtenerCentrosCosto);
 
-        if(!Variables.IP.equals("") && centrosCostoCargados.isEmpty()){
+        /*if(!Variables.IP.equals("") && centrosCostoCargados.isEmpty()){
             botonCC.setEnabled(true);
         }else{
             botonCC.setEnabled(false);
-        }
+        }*/
 
         consultarIntents(getIntent());
         mostrarDatos();
@@ -60,7 +62,8 @@ public class Configuracion extends AppCompatActivity {
 
     private void mostrarDatos(){
         mostrarIP();
-        mostrarCentrosCosto();
+        mostrarNombre();
+        //mostrarCentrosCosto();
     }
 
     private void mostrarIP(){
@@ -70,7 +73,13 @@ public class Configuracion extends AppCompatActivity {
         }
     }
 
-    private void mostrarCentrosCosto(){
+    private void mostrarNombre(){
+        final TextView textNombre = findViewById(R.id.txtNombreCargado);
+        if(!Variables.NOMBRE.equals("")){
+            textNombre.setText(Variables.NOMBRE);
+        }
+    }
+    /*private void mostrarCentrosCosto(){
         final TextView outputCC = findViewById(R.id.txtOutputCentros);
         if(centrosCostoCargados != null){
             for(int i = 0; i < centrosCostoCargados.size(); i++){
@@ -78,14 +87,30 @@ public class Configuracion extends AppCompatActivity {
                 outputCC.setText(outputCC.getText() + centrosCostoCargados.get(i).getId().toString()+") "+centrosCostoCargados.get(i).getNombre() + "\n");
             }
         }
-    }
+    }*/
 
     public void ingresarIP(View view){
         Intent intent = new Intent(this, IngresarIP.class);
         startActivity(intent);
     }
 
-    public void obtenerCentrosCosto(View view){
+    public void ingresarNombre(View view){
+        EditText editNombre = findViewById(R.id.editTextNombre);
+        String nombre = editNombre.getText().toString();
+
+        if(nombre != null){
+            System.out.println("Nombre ingresado: "+ nombre);
+            TextView nombreCargado = findViewById(R.id.txtNombreCargado);
+            nombreCargado.setText(nombre);
+            Variables.NOMBRE = nombre;
+            writeToFile("nombre.txt",nombre);
+            editNombre.setText("");
+        }else{
+            Toast.makeText(this, "Debe ingresar un nombre", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /*public void obtenerCentrosCosto(View view){
         centrosCostoCargados = socketCliente.obtenerCentrosCosto();
         if(centrosCostoCargados != null){
             mostrarCentrosCosto();
@@ -93,12 +118,23 @@ public class Configuracion extends AppCompatActivity {
         }else{
             Toast.makeText(this, "No se pudieron obtener los centros de costo", Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 
     public void volverInicio(View view){
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("CC_MESSAGE",(Serializable) centrosCostoCargados);
         intent.putExtra("SOCKET_MESSAGE", socketCliente);
         startActivity(intent);
+    }
+
+    public void writeToFile(String nombreArchivo, String contenido){
+        File directorio = getApplicationContext().getFilesDir();
+        try {
+            FileOutputStream escritor = new FileOutputStream(new File(directorio, nombreArchivo));
+            escritor.write(contenido.getBytes());
+            escritor.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

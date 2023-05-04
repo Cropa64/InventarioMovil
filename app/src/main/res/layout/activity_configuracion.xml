@@ -19,65 +19,63 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnObtenerCentrosCosto"
+        android:id="@+id/btnCargarNombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:background="@android:color/holo_green_dark"
-        android:onClick="obtenerCentrosCosto"
-        android:text="OBTENER CENTROS DE COSTO"
+        android:onClick="ingresarNombre"
+        android:text="CARGAR NOMBRE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnIngresarIP2" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="287dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
-        android:text="Centros de costo cargados"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <TextView
-        android:id="@+id/txtOutputCentros"
-        android:layout_width="287dp"
-        android:layout_height="148dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="108dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNombre" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="24dp"
         android:text="IP Cargada:"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnObtenerCentrosCosto" />
+        app:layout_constraintTop_toBottomOf="@+id/btnIngresarIP2" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="Nombre cargado:"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCargarNombre" />
 
     <TextView
         android:id="@+id/txtIPOutput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="24dp"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/btnObtenerCentrosCosto" />
+        app:layout_constraintTop_toBottomOf="@+id/btnIngresarIP2" />
+
+    <TextView
+        android:id="@+id/txtNombreCargado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/btnCargarNombre" />
 
     <Button
         android:id="@+id/btnInicio"
@@ -91,4 +89,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="101dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:hint="Nombre"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/btnCargarNombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

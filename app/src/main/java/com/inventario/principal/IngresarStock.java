@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.inventario.network.SocketCliente;
 import com.inventario.principal.R;
+import com.inventario.utilidades.Variables;
 
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -39,64 +40,65 @@ public class IngresarStock extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingresar_stock);
-        radioGroup = findViewById(R.id.grupo_radio);
-        textProdYaContabilizado = findViewById(R.id.textYaContabilizado);
+        //radioGroup = findViewById(R.id.grupo_radio);
+        //textProdYaContabilizado = findViewById(R.id.textYaContabilizado);
         mostrarDatos();
     }
 
     public void mostrarDatos(){
         Intent intent = getIntent();
         socketCliente = (SocketCliente) intent.getSerializableExtra("SOCKET");
-        idCC = (Integer) intent.getIntExtra("IDCC", -1);
+        //idCC = (Integer) intent.getIntExtra("IDCC", -1);
         producto = (Producto) intent.getSerializableExtra("DATOS");
-        centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CCCARGADOS");
-        Integer prodYaCargado = (Integer) intent.getIntExtra("YACARGADO",-2);
+        //centrosCostoCargados = (List<CentroCosto>) intent.getSerializableExtra("CCCARGADOS");
+        //Integer prodYaCargado = (Integer) intent.getIntExtra("YACARGADO",-2);
 
         if((List<Producto>) intent.getSerializableExtra("PRODCARGADOS") != null){
             productosCargados = (List<Producto>) intent.getSerializableExtra("PRODCARGADOS");
         }
 
-        if(prodYaCargado > -1){
+        /*if(prodYaCargado > -1){
             producto = productosCargados.get(prodYaCargado);
             radioGroup.setVisibility(View.VISIBLE);
             textProdYaContabilizado.setVisibility(View.VISIBLE);
         }else{
             radioGroup.setVisibility(View.GONE);
             textProdYaContabilizado.setVisibility(View.GONE);
-        }
+        }*/
 
         txtDescripcion = findViewById(R.id.txtDescripcion);
         txtCodigo = findViewById(R.id.txtCodigo);
         txtStock = findViewById(R.id.txtStock);
         txtVenta = findViewById(R.id.textVenta);
-        txtCosto = findViewById(R.id.textCosto);
+        //txtCosto = findViewById(R.id.textCosto);
 
         txtDescripcion.setText(producto.getDescripcion());
         txtCodigo.setText(producto.getCodigo());
         txtStock.setText(producto.getStock().toString());
         txtVenta.setText(producto.getVenta().toString());
-        txtCosto.setText(producto.getCosto().toString());
+        //txtCosto.setText(producto.getCosto().toString());
     }
 
     public void ingresarStock(View view){
         RadioButton radioButton;
 
-        int radioId = radioGroup.getCheckedRadioButtonId();
-        radioButton = findViewById(radioId);
+        //int radioId = radioGroup.getCheckedRadioButtonId();
+        //radioButton = findViewById(radioId);
 
         //Toast.makeText(this, "Radio seleccionado: "+radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
 
-        String accion = determinarAccion(radioButton.getText().toString());
+        //String accion = determinarAccion(radioButton.getText().toString());
 
         EditText stockNuevoEditTxt = findViewById(R.id.editTxtNuevoStock);
         if(!stockNuevoEditTxt.getText().toString().equals("")){
             Float stockNuevo = Float.parseFloat(stockNuevoEditTxt.getText().toString());
             try{
                 JSONObject envioStock = new JSONObject();
+                envioStock.put("nombre", Variables.NOMBRE);
                 envioStock.put("codigo",txtCodigo.getText().toString());
-                envioStock.put("idcentrodecosto", idCC);
+                //envioStock.put("idcentrodecosto", idCC);
                 envioStock.put("stock", stockNuevo);
-                envioStock.put("accion", accion);
+                //envioStock.put("accion", accion);
 
                 System.out.println("ENVIO: "+envioStock);
                 String resultado = socketCliente.enviarStockNuevo(envioStock);
@@ -104,23 +106,17 @@ public class IngresarStock extends AppCompatActivity {
                 if(resultado.equals("ok")){
                     Toast.makeText(this, "Stock cargado correctamente", Toast.LENGTH_LONG).show();
 
-                    if(radioGroup.getVisibility() == RadioGroup.GONE){
-                        producto.setStock(stockNuevo);
-                        productosCargados.add(producto);
-                    }else{
-                        if(accion.equals("sumar")){
-                            producto.setStock(producto.getStock() + stockNuevo);
-                        }else if(accion.equals("reemplazar")){
-                            producto.setStock(stockNuevo);
-                        }
-                    }
+                    //if(radioGroup.getVisibility() == RadioGroup.GONE){
+                    producto.setStock(stockNuevo);
+                    productosCargados.add(producto);
+                    //}
 
                     Intent intent = new Intent(this, Inventario.class);
                     intent.putExtra("STOCKOK", 1);
-                    intent.putExtra("IDCC", idCC);
+                    //intent.putExtra("IDCC", idCC);
                     intent.putExtra("SOCKET", socketCliente);
                     intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
-                    intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
+                    //intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
                     startActivity(intent);
                 } else{
                     Toast.makeText(this, "Error: "+resultado, Toast.LENGTH_SHORT).show();
@@ -133,7 +129,7 @@ public class IngresarStock extends AppCompatActivity {
         }
     }
 
-    private String determinarAccion(String textRadioSelected){
+    /*private String determinarAccion(String textRadioSelected){
         switch(textRadioSelected){
             case "Sumar":
                 return "sumar";
@@ -143,5 +139,5 @@ public class IngresarStock extends AppCompatActivity {
                 return "";
         }
         return null;
-    }
+    }*/
 }

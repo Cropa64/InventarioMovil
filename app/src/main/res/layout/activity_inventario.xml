@@ -8,29 +8,37 @@
 
     <Button
         android:id="@+id/btnScan2"
-        android:layout_width="133dp"
+        android:layout_width="100dp"
         android:layout_height="74dp"
-        android:layout_marginStart="65dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="20dp"
         android:background="@android:color/holo_green_dark"
         android:text="SCAN"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnTerminar"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btnTerminar"
-        android:layout_width="133dp"
+        android:id="@+id/btnManual"
+        android:layout_width="100dp"
         android:layout_height="74dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginBottom="24dp"
-        android:onClick="terminar"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="20dp"
         android:background="@android:color/holo_green_dark"
+        android:onClick="ingresoManual"
+        android:text="MANUAL"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnTerminar" />
+
+    <Button
+        android:id="@+id/btnTerminar"
+        android:layout_width="100dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:color/holo_green_dark"
+        android:onClick="terminar"
         android:text="TERMINAR"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnScan2" />
 
     <TextView

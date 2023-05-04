@@ -35,10 +35,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         DWUtilities.CreateDWProfile(this);
         Variables.IP = leerIP("ip.txt");
+        Variables.NOMBRE = leerNombre("nombre.txt");
 
         if(!Variables.IP.equals("")){
             System.out.println("IP LEIDA: "+Variables.IP);
             socketCliente = new SocketCliente(Variables.IP);
+        }
+        if(!Variables.NOMBRE.equals("")){
+            System.out.println("NOMBRE LEIDO: "+Variables.NOMBRE);
         }
 
         //CONSULTO INTENTS DESDE OTRA ACTIVIDAD CUANDO SE CREA ESTA
@@ -55,7 +59,21 @@ public class MainActivity extends AppCompatActivity {
             return new String(contenido);
         }catch(Exception e){
             e.printStackTrace();
-            return "";
+            return e.getMessage();
+        }
+    }
+
+    public String leerNombre(String nombreArchivo){
+        File directorio = getApplicationContext().getFilesDir();
+        File archivoLeido = new File(directorio, nombreArchivo);
+        byte[] contenido = new byte[(int) archivoLeido.length()];
+        try{
+            FileInputStream stream = new FileInputStream(archivoLeido);
+            stream.read(contenido);
+            return new String(contenido);
+        }catch(Exception e){
+            e.printStackTrace();
+            return e.getMessage();
         }
     }
 
@@ -75,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     //BOTON COMENZAR TOMA DE INVENTARIO
     public void comenzar(View view){
         if(socketCliente != null){
-            //OBTENGO EL NUMERO DE LA TOMA DE INVENTARIO
+            /*//OBTENGO EL NUMERO DE LA TOMA DE INVENTARIO
             Integer numTomaInventario = socketCliente.obtenerNumTomaInventario();
 
             //CARGO LOS NOMBRES EN CHARSEQUENCE PARA USARLOS EN EL ALERT
@@ -105,6 +123,23 @@ public class MainActivity extends AppCompatActivity {
                         .show();
             }else{
                 Toast.makeText(this, "No se pudo obtener el numero de toma de inventario", Toast.LENGTH_LONG).show();
+            }*/
+
+            //LOGIN EN LA APP INVENTARIO
+            String rta = socketCliente.login();
+
+
+            if(rta.equals("ok")){
+                //Toast.makeText(this, rta, Toast.LENGTH_LONG).show();
+                //ARMO EL INTENT PARA INICIAR LA ACTIVIDAD DE LA TOMA DE INVENTARIO
+                Intent intent = new Intent(MainActivity.this, Inventario.class);
+                intent.putExtra("SOCKET", socketCliente);
+                //intent.putExtra("IDCC", idCCSeleccionado);
+                //intent.putExtra("PRODCARGADOS", (Serializable) productosCargados);
+                //intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
+                startActivity(intent);
+            }else{
+                Toast.makeText(this, rta, Toast.LENGTH_LONG).show();
             }
         }else{
             Toast.makeText(this, "Primero debe configurar la aplicacion", Toast.LENGTH_LONG).show();
