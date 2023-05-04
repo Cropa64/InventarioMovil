@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -46,6 +47,8 @@ public class IngresarStock extends AppCompatActivity {
         //textProdYaContabilizado = findViewById(R.id.textYaContabilizado);
         EditText editTextIngresoStock = findViewById(R.id.editTxtNuevoStock);
         editTextIngresoStock.setOnEditorActionListener(editorActionListener);
+        editTextIngresoStock.requestFocus();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         mostrarDatos();
     }
 
