@@ -119,6 +119,7 @@ public class SocketCliente implements Serializable {
             if(conexion.getResponseCode() == 200){
                 try(BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getInputStream(), "utf-8"))) {
                     String jsonArmado = Utiles.obtenerLineaString(br);
+                    System.out.println("JSON ARMADO: "+jsonArmado);
                     rtaJson = new JSONObject(jsonArmado);
                 }
                 System.out.println(rtaJson);

@@ -46,7 +46,7 @@ public class Configuracion extends AppCompatActivity {
     private void consultarIntents(Intent intent){
         if(intent != null){
             if(intent.getStringExtra("IP_MESSAGE_INGRESARIP") != null){
-                botonCC.setEnabled(true);
+                //botonCC.setEnabled(true);
                 String IP;
                 IP = intent.getStringExtra("IP_MESSAGE_INGRESARIP");
                 socketCliente = new SocketCliente(IP);

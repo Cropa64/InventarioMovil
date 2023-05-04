@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             return new String(contenido);
         }catch(Exception e){
             e.printStackTrace();
-            return e.getMessage();
+            return "";
         }
     }
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             return new String(contenido);
         }catch(Exception e){
             e.printStackTrace();
-            return e.getMessage();
+            return "";
         }
     }
 
