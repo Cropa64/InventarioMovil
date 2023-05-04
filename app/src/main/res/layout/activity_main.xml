@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:text="Ver 1.0.0"
+        android:text="Ver 1.0.1"
         android:textColor="#2F9133"
         android:textSize="16sp"
         android:textStyle="bold"
