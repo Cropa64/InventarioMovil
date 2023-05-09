@@ -3,12 +3,16 @@ package com.inventario.principal;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,7 +85,7 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         });
     }
 
-    //TERMINAR INGRESO MANUAL DE CODIGO DE BARRAS
+    //INGRESO MANUAL DE CODIGO DE BARRAS
     public void ingresoManual(View view){
         //final String[] codigoIngresado = new String[16];
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -90,7 +94,10 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setHint("Codigo");
+        //input.setImeOptions(EditorInfo.IME_ACTION_SEND);
+
         builder.setView(input);
+        input.requestFocus();
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override

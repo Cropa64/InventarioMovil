@@ -87,13 +87,13 @@ public class IngresarStock extends AppCompatActivity {
 
         txtDescripcion = findViewById(R.id.txtDescripcion);
         txtCodigo = findViewById(R.id.txtCodigo);
-        txtStock = findViewById(R.id.txtStock);
+        //txtStock = findViewById(R.id.txtStock);
         txtVenta = findViewById(R.id.textVenta);
         //txtCosto = findViewById(R.id.textCosto);
 
         txtDescripcion.setText(producto.getDescripcion());
         txtCodigo.setText(producto.getCodigo());
-        txtStock.setText(producto.getStock().toString());
+        //txtStock.setText(producto.getStock().toString());
         txtVenta.setText(producto.getVenta().toString());
         //txtCosto.setText(producto.getCosto().toString());
     }

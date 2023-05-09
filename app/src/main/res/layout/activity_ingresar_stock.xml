@@ -31,59 +31,39 @@
         app:layout_constraintTop_toBottomOf="@+id/txtTextoCodigo" />
 
     <TextView
-        android:id="@+id/txtTextoStock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Stock actual: "
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTextoDescripcion" />
-
-    <TextView
-        android:id="@+id/txtStock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="112dp"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/txtTextoStock"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/txtCodigo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="1dp"
         android:textAlignment="center"
-        android:textColor="#000000"
-        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/txtTextoCodigo"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView3"
+    <EditText
+        android:id="@+id/editTxtNuevoStock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="150dp"
-        android:text="Nuevo stock"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="101dp"
+        android:ems="10"
+        android:hint="Stock"
+        android:imeOptions="actionSend"
+        android:inputType="number"
+        android:textAlignment="center"
         android:textColor="#000000"
-        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTextoStock" />
+        app:layout_constraintTop_toBottomOf="@+id/txtDescripcion" />
 
     <Button
         android:id="@+id/btnIngresarNuevoStock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="124dp"
+        android:layout_marginStart="123dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="124dp"
         android:background="@android:color/holo_green_dark"
@@ -93,30 +73,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTxtNuevoStock" />
 
-    <EditText
-        android:id="@+id/editTxtNuevoStock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="100dp"
-        android:ems="10"
-        android:hint="Stock"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        android:imeOptions="actionSend"/>
-
     <TextView
         android:id="@+id/txtDescripcion"
-        android:layout_width="258dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="24dp"
-        android:textColor="#000000"
-        android:textSize="20sp"
+        android:layout_width="234dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/txtTextoDescripcion"
         app:layout_constraintTop_toBottomOf="@+id/txtCodigo" />
 
@@ -124,21 +87,21 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
         android:text="Venta:"
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTextoStock" />
+        app:layout_constraintTop_toBottomOf="@+id/txtTextoDescripcion" />
 
     <TextView
         android:id="@+id/textVenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="155dp"
-        android:textColor="#000000"
+        android:layout_marginTop="144dp"
+        android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView8"
         app:layout_constraintTop_toTopOf="parent" />

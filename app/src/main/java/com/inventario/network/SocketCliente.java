@@ -56,7 +56,7 @@ public class SocketCliente implements Serializable {
             }
         }catch(Exception e){
             e.printStackTrace();
-            return "No hay una toma de inventario iniciada";
+            return "No hay conexion al servidor";
         }
     }
 

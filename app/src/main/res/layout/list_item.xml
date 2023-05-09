@@ -10,7 +10,7 @@
         android:layout_marginTop="16dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="325dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="10dp"
             android:orientation="horizontal">
@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:text="Producto 1"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="18dp"
+                    android:textSize="24dp"
                     android:textStyle="bold"></TextView>
 
                 <TextView
@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:text="Stock ingresado: 50"
                     android:textColor="@color/cardview_dark_background"
-                    android:textSize="14dp">
+                    android:textSize="20dp">
 
                 </TextView>
 
