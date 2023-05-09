@@ -65,6 +65,7 @@ public class SocketCliente implements Serializable {
             URL url = new URL(ip_server+"/inventario");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("POST");
+            conexion.setConnectTimeout(3000);
             conexion.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conexion.setDoOutput(true);
             conexion.setDoInput(true);
@@ -92,11 +93,11 @@ public class SocketCliente implements Serializable {
                     return rtaJson.getString("descripcion");
                 }
             }else{
-                return "Error de comunicacion con el servidor";
+                return "Error";
             }
         }catch (Exception e){
             e.printStackTrace();
-            return e.getMessage();
+            return "No hay conexion con el servidor";
         }
     }
 
@@ -106,6 +107,7 @@ public class SocketCliente implements Serializable {
             URL url = new URL(ip_server+"/consulta");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("POST");
+            conexion.setConnectTimeout(3000);
             conexion.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conexion.setDoOutput(true);
             conexion.setDoInput(true);
@@ -146,7 +148,7 @@ public class SocketCliente implements Serializable {
             }
         }catch(Exception e){
             e.printStackTrace();
-            return null;
+            return "No hay conexion al servidor";
         }
     }
 
@@ -155,6 +157,7 @@ public class SocketCliente implements Serializable {
             URL url = new URL(ip_server+"/end");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("GET");
+            conexion.setConnectTimeout(3000);
 
             if(conexion.getResponseCode() == 200){
                 BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
@@ -169,11 +172,11 @@ public class SocketCliente implements Serializable {
                     return problema;
                 }
             }else{
-                return "Error de comunicacion con el servidor";
+                return "Error";
             }
         }catch(Exception e){
             e.printStackTrace();
-            return "Error desconocido";
+            return "No hay conexion al servidor";
         }
     }
 
