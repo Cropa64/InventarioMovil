@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Producto> productosCargados;
     private SocketCliente socketCliente;
     private Integer idCCSeleccionado;
+    private String nombre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
             socketCliente = new SocketCliente(Variables.IP);
         }
         if(!Variables.NOMBRE.equals("")){
-            System.out.println("NOMBRE LEIDO: "+Variables.NOMBRE);
+            nombre = Variables.NOMBRE;
+            System.out.println("NOMBRE LEIDO: "+nombre);
         }
 
         //CONSULTO INTENTS DESDE OTRA ACTIVIDAD CUANDO SE CREA ESTA
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     //BOTON COMENZAR TOMA DE INVENTARIO
     public void comenzar(View view){
-        if(socketCliente != null){
+        if(socketCliente != null && !nombre.equals("")){
             /*//OBTENGO EL NUMERO DE LA TOMA DE INVENTARIO
             Integer numTomaInventario = socketCliente.obtenerNumTomaInventario();
 
