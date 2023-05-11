@@ -138,7 +138,7 @@ public class IngresarStock extends AppCompatActivity {
                     //intent.putExtra("CCCARGADOS", (Serializable) centrosCostoCargados);
                     startActivity(intent);
                 } else{
-                    Toast.makeText(this, "Error: "+resultado, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, resultado, Toast.LENGTH_SHORT).show();
                 }
             }catch(Exception e){
                 e.printStackTrace();

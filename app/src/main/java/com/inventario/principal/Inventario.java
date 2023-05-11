@@ -195,10 +195,11 @@ public class Inventario extends AppCompatActivity implements View.OnTouchListene
             intent.putExtra("SOCKET_MESSAGE", socketCliente);
             intent.putExtra("CC_MESSAGE", (Serializable) centrosCostoCargados);
             startActivity(intent);
-        }else if(respuesta.equals("Error desconocido")){
-            Toast.makeText(this, "Error al finalizar la toma de inventario", Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("SOCKET_MESSAGE", socketCliente);
+            intent.putExtra("CC_MESSAGE", (Serializable) centrosCostoCargados);
+            startActivity(intent);
         }
     }
 

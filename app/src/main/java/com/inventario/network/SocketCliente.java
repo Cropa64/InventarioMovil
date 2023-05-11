@@ -74,17 +74,12 @@ public class SocketCliente implements Serializable {
             os.write(envio.toString().getBytes("UTF-8"));
             os.flush();
 
-            String resultado;
+            JSONObject rtaJson;
             if(conexion.getResponseCode() == 200){
                 try(BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getInputStream(), "utf-8"))) {
-                    StringBuilder response = new StringBuilder();
-                    String responseLine;
-                    while ((responseLine = br.readLine()) != null) {
-                        response.append(responseLine.trim());
-                    }
-                    resultado = response.toString();
+                    String resultado = Utiles.obtenerLineaString(br);
+                    rtaJson = new JSONObject(resultado);
                 }
-                JSONObject rtaJson = new JSONObject(resultado);
                 String statusInventario = rtaJson.getString("status");
 
                 if(statusInventario.equals("ok")){
@@ -93,7 +88,15 @@ public class SocketCliente implements Serializable {
                     return rtaJson.getString("descripcion");
                 }
             }else{
-                return "Error";
+                try(BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getErrorStream(), "utf-8"))) {
+                    String resultado = Utiles.obtenerLineaString(br);
+                    rtaJson = new JSONObject(resultado);
+
+                    return rtaJson.getString("error");
+                }catch(Exception e){
+                    e.printStackTrace();
+                    return "Error de comunicacion con el servidor";
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -141,10 +144,18 @@ public class SocketCliente implements Serializable {
                     return "ok";
                 }
             }else{
-                os.close();
-                conexion.disconnect();
+                try(BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getErrorStream(), "utf-8"))) {
+                    String jsonArmado = Utiles.obtenerLineaString(br);
+                    System.out.println("JSON ARMADO: "+jsonArmado);
+                    rtaJson = new JSONObject(jsonArmado);
 
-                return "El producto no existe";
+                    os.close();
+                    conexion.disconnect();
+
+                    return rtaJson.getString("error");
+                }catch(Exception e){
+                    return "Error de comunicacion con el servidor";
+                }
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -172,7 +183,11 @@ public class SocketCliente implements Serializable {
                     return problema;
                 }
             }else{
-                return "Error";
+                BufferedReader fromServer = new BufferedReader(new InputStreamReader(conexion.getErrorStream()));
+                String jsonRtaString = Utiles.obtenerLineaString(fromServer);
+                JSONObject jsonRta = new JSONObject(jsonRtaString);
+
+                return jsonRta.getString("error");
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -180,7 +195,7 @@ public class SocketCliente implements Serializable {
         }
     }
 
-    public Integer obtenerNumTomaInventario(){
+    /*public Integer obtenerNumTomaInventario(){
         try{
             URL url = new URL(ip_server+"/start");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
@@ -202,7 +217,7 @@ public class SocketCliente implements Serializable {
             e.printStackTrace();
             return 0;
         }
-    }
+    }*/
 
     /*public List<CentroCosto> obtenerCentrosCosto(){
         try{
