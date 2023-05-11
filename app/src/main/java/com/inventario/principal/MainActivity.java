@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     //BOTON COMENZAR TOMA DE INVENTARIO
     public void comenzar(View view){
-        if(socketCliente != null && !nombre.equals("")){
+        if(socketCliente != null && nombre != null){
             /*//OBTENGO EL NUMERO DE LA TOMA DE INVENTARIO
             Integer numTomaInventario = socketCliente.obtenerNumTomaInventario();
 
